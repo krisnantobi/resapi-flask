@@ -29,6 +29,13 @@ def initUser(app):
             'data': [],
             'message': result
         })
+    @app.route('/users/<id>', methods= ['GET'])
+    def detailUser(id):
+        result = userController.detailUser(id)
+        return jsonify({
+            'data': result,
+            'message': 'Success' 
+        }), 200
 
     @app.route('/users/<var>/edit', methods= ['PUT'])
     def editUser(var):

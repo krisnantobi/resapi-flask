@@ -29,3 +29,7 @@ class User(BaseController):
             var = "Seccess"
             pass
         return var
+
+    def detailUser(self, id):
+        result = self.repository.detailUserRepo(id)
+        return result
