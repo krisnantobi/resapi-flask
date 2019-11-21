@@ -32,13 +32,26 @@ class AuthRepository(object):
 
         encodeJWT = self.jwt.encode({
             "iss": "restApiFlask",
-            "exp": datetime.now() + timedelta(hours=2),
+            "exp": datetime.timestamp(datetime.now() + timedelta(minutes=2)),
             "uid": str(data['_id']),
             'uname': data['username']
         }, 'key', algorithm='HS256')
 
         result = {
-            'token': str(encodeJWT)[2:]
+            'token': str(encodeJWT)[2: -1]
         }
         
         return result
+    
+    def verifyToken(self, authorization):
+        try:
+            token = authorization[7:]
+            prefix = authorization[:7].lower()
+            if prefix == "bearer ":
+                self.jwt.decode(token, 'key', algorithms='HS256')
+                return {'data': True, 'status': 200}
+        except jwt.exceptions.ExpiredSignatureError:
+            return {'data': False, 'status': 403, 'message': 'Token is Expired'}
+        except:
+            return {'data': False, 'status': 403, 'message': 'Invalid token'}
+            

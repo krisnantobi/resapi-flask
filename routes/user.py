@@ -1,13 +1,15 @@
 from flask import request, Response, json, jsonify
-from init.init import userController
+from init.init import userController, authRepo
+from utils.check_auth import checkAuth
+import jwt
 
 
 def initUser(app):
 
     @app.route('/users', methods= ["POST"])
+    @checkAuth
     def createUser():
-        data = request.json
-        
+        data = request.json        
         result = userController.createUser(data)
         return jsonify({
             'data': result,
